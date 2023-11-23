@@ -87,9 +87,9 @@ public class BookServiceImpl implements BookService{
     //중복 확인
     private Book getExistBook(Long id) {
         return bookRepository
-                .findById(id) //Optional<Pokemon>
+                .findById(id)
                 .orElseThrow(() ->
-                        new ResourceNotFoundException("Pokemon could not be found"));
+                        new ResourceNotFoundException("Book could not be found"));
     }
 
     //Dto 클래스로 변환

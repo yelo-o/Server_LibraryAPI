@@ -25,7 +25,7 @@ public class SecurityConfig {
 								.csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> {
                     auth.requestMatchers("/api/auth/**").permitAll()
-                        .requestMatchers("/api/pokemon/**","/api/admin/**").authenticated();
+                        .requestMatchers("/api/book/**","/api/admin/**").authenticated();
                  })
                  .formLogin(withDefaults())  
                  .build();
