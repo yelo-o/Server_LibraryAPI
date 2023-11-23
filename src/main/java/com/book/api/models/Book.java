@@ -17,7 +17,7 @@ public class Book {
     @Column(name = "book_id")
     private Long id;
 
-    private String name;
+    private String title;
 
     private String author;
 
@@ -26,5 +26,9 @@ public class Book {
     @Enumerated(EnumType.STRING)
     private BookType type;
 
+    private int copies; //total cnt
+    private int copiesAvailable; //available cnt
+
+    private BookStatus status; //AVAILABLE, VACANT
 
 }

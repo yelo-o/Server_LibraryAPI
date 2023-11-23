@@ -30,8 +30,11 @@ public class BookServiceImpl implements BookService{
 
         BookDto bookResponse = new BookDto();
         bookResponse.setId(newBook.getId());
-        bookResponse.setName(newBook.getName());
+        bookResponse.setTitle(newBook.getTitle());
         bookResponse.setType(newBook.getType());
+        bookResponse.setPublisher(newBook.getPublisher());
+        bookResponse.setAuthor(newBook.getAuthor());
+
         return bookResponse;
     }
 
@@ -65,8 +68,8 @@ public class BookServiceImpl implements BookService{
     @Override
     public BookDto updateBookById(BookDto bookDto, Long id) {
         Book book = getExistBook(id);
-        if (bookDto.getName() != null) {
-            book.setName(bookDto.getName());
+        if (bookDto.getTitle() != null) {
+            book.setTitle(bookDto.getTitle());
         }
         if (bookDto.getType() != null) {
             book.setType(bookDto.getType());
@@ -93,7 +96,7 @@ public class BookServiceImpl implements BookService{
     private BookDto mapToDto(Book book) {
         BookDto bookDto = new BookDto();
         bookDto.setId(book.getId());
-        bookDto.setName(book.getName());
+        bookDto.setTitle(book.getTitle());
         bookDto.setType(book.getType());
         return bookDto;
     }
@@ -101,7 +104,7 @@ public class BookServiceImpl implements BookService{
     //Entity 클래스로 변환
     private Book mapToEntity(BookDto bookDto) {
         Book book = new Book();
-        book.setName(bookDto.getName());
+        book.setTitle(bookDto.getTitle());
         book.setType(bookDto.getType());
         book.setType(bookDto.getType());
         return book;
