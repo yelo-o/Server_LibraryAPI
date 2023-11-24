@@ -4,7 +4,6 @@ import com.book.api.exceptions.security.CustomAccessDeniedHandler;
 import com.book.api.exceptions.security.JwtAuthEntryPoint;
 import com.book.api.jwt.filter.JWTAuthenticationFilter;
 import com.book.api.service.security.CustomUserDetailsService;
-import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -23,8 +22,6 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 
 import java.util.Collections;
-
-import static org.springframework.security.config.Customizer.withDefaults;
 
 @Configuration
 @EnableWebSecurity
