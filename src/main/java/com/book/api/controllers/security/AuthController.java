@@ -40,7 +40,7 @@ public class AuthController {
     @PostMapping("/register")
     public ResponseEntity<String> register(@RequestBody UserDto userDto) {
         if (userRepository.existsByUsername(userDto.getUsername())) {
-            return new ResponseEntity<>("Username is taken!", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("이 Username은 이미 사용 중입니다.!", HttpStatus.BAD_REQUEST);
         }
 
         UserEntity user = new UserEntity();
@@ -59,7 +59,7 @@ public class AuthController {
         user.setRoles(Collections.singletonList(roles));
         userRepository.save(user);
 
-        return new ResponseEntity<>("User registered success!", HttpStatus.OK);
+        return new ResponseEntity<>("유저가 등록되었습니다.", HttpStatus.OK);
     }
 
     @PostMapping("/login")

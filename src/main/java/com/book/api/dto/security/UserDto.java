@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 public class UserDto {
-    private int id;
+    private Long id;
     private String username;
     private String firstName;
     private String lastName;
@@ -21,7 +21,7 @@ public class UserDto {
     private String role;
 
     @Builder
-    public UserDto(int id, String username, String firstName,
+    public UserDto(Long id, String username, String firstName,
                    String lastName, String role) {
         this.id = id;
         this.username = username;
