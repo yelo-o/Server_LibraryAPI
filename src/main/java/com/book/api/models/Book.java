@@ -6,12 +6,12 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Entity
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class Book {
+@Entity
+public class Book extends BaseTimeEntity{
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "book_id")
@@ -29,6 +29,7 @@ public class Book {
     private int copies; //total cnt
     private int copiesAvailable; //available cnt
 
+    @Enumerated(EnumType.STRING)
     private BookStatus status; //AVAILABLE, VACANT
 
 }
