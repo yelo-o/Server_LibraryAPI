@@ -6,6 +6,9 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -21,11 +24,16 @@ public class Book extends BaseTimeEntity{
     private String author;
     private String publisher;
 
+    private int quantity;
+
     @Enumerated(EnumType.STRING)
     private BookStatus status; //AVAILABLE, VACANT
 
+    @OneToMany(mappedBy = "book", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<History> histories = new ArrayList<>();
+
 //    @Enumerated(EnumType.STRING)
 //    private BookType type;
-//    private int copies; //total cnt
+
 //    private int copiesAvailable; //available cnt
 }

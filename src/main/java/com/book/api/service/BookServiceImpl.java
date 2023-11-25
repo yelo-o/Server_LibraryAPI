@@ -4,7 +4,13 @@ import com.book.api.dto.BookDto;
 import com.book.api.dto.PageResponse;
 import com.book.api.exceptions.ResourceNotFoundException;
 import com.book.api.models.Book;
+import com.book.api.models.BookStatus;
+import com.book.api.models.History;
+import com.book.api.models.HistoryType;
+import com.book.api.models.security.UserEntity;
 import com.book.api.repository.BookRepository;
+import com.book.api.repository.HistoryRepository;
+import com.book.api.repository.security.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -14,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Transactional
@@ -21,6 +28,8 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class BookServiceImpl implements BookService{
     private final BookRepository bookRepository;
+    private final HistoryRepository historyRepository;
+    private final UserRepository userRepository;
 
     @Override
     public BookDto createBook(BookDto bookDto) {
@@ -30,6 +39,65 @@ public class BookServiceImpl implements BookService{
         BookDto bookResponse = mapToDto(newBook);
 
         return bookResponse;
+    }
+
+    @Override
+    public boolean createBorrowHistory(Long id, String username) {
+        //Get User Entity
+        Optional<UserEntity> optionalUser = userRepository.findByUsername(username);
+        UserEntity user = optionalUser.orElseThrow();
+
+        Book book = getExistBook(id);
+//        BookStatus status = book.getStatus();
+        int quantity = book.getQuantity();
+
+        if (quantity > 0) {
+            //History update
+            History history = History.builder()
+                    .user(user)
+                    .book(book)
+                    .type(HistoryType.BORROW)
+                    .build();
+            historyRepository.save(history);
+
+            //Book update
+            quantity--;
+            book.setQuantity(quantity);
+            if (quantity == 0) {
+                book.setStatus(BookStatus.VACANT);
+            }
+            bookRepository.save(book);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public boolean createReturnHistory(Long id, String username) {
+        //Get User Entity
+        Optional<UserEntity> optionalUser = userRepository.findByUsername(username);
+        UserEntity user = optionalUser.orElseThrow();
+
+        Book book = getExistBook(id);
+        BookStatus status = book.getStatus();
+        int quantity = book.getQuantity();
+        quantity++;
+        book.setQuantity(quantity);
+
+
+        if (status == BookStatus.VACANT) {
+            book.setStatus(BookStatus.AVAILABLE);
+        }
+        bookRepository.save(book);
+
+        History history = History.builder()
+                .user(user)
+                .book(book)
+                .type(HistoryType.RETURN)
+                .build();
+        historyRepository.save(history);
+        return true;
     }
 
     @Override
@@ -73,18 +141,39 @@ public class BookServiceImpl implements BookService{
     }
 
     @Override
+    public boolean updateHistoryById(Long id) {
+        //user id
+        //book id
+        //history id
+        History history = getExistHistory(id);
+        Book book = getExistBook(id);
+        if (book.getStatus() == BookStatus.AVAILABLE) {
+            book.setStatus(BookStatus.VACANT);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    @Override
     public void deleteBookById(Long id) {
         Book book = getExistBook(id);
         bookRepository.delete(book);
     }
 
 
-    //중복 확인
     private Book getExistBook(Long id) {
         return bookRepository
                 .findById(id)
                 .orElseThrow(() ->
                         new ResourceNotFoundException("Book could not be found"));
+    }
+
+    private History getExistHistory(Long id) {
+        return historyRepository
+                .findById(id)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("History could not be found"));
     }
 
     //Dto 클래스로 변환

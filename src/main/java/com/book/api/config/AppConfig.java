@@ -32,7 +32,7 @@ public class AppConfig {
                             .publisher("No." + i + " publishing company")
                             .author("author " + i)
                             .status(BookStatus.AVAILABLE)
-//                            .copies(10)
+                            .quantity(i)
 //                            .copiesAvailable(5)
 //                            .type(BookType.CLASSIC)
                             .build())

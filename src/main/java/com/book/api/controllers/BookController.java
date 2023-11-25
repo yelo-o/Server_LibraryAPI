@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -59,6 +60,34 @@ public class BookController {
     @GetMapping("/booktypes")
     public ResponseEntity<List<String>> getBookTypes() {
         return new ResponseEntity<>(BookType.nameList(), HttpStatus.OK);
+    }
+
+    //책 대여
+    @PostMapping("/borrow/{id}")
+    public ResponseEntity<String> borrowBook(@PathVariable("id") Long bookId,
+                                             Authentication authentication) {
+        String username = authentication.getName();
+        String message;
+        if (bookService.createBorrowHistory(bookId, username)) {
+            message = "책 대여가 완료되었습니다.";
+        } else {
+            message = "현재 모든 책이 대여중입니다.";
+        }
+        return new ResponseEntity<>(message, HttpStatus.OK);
+    }
+
+    //책 반납
+    @PostMapping("/return/{id}")
+    public ResponseEntity<String> returnBook(@PathVariable("id") Long bookId,
+                                             Authentication authentication) {
+        String username = authentication.getName();
+        String message;
+        if (bookService.createReturnHistory(bookId, username)) {
+            message = "책 반납이 완료되었습니다.";
+        } else {
+            message = "이미 대여중인 책입니다.";
+        }
+        return new ResponseEntity<>(message, HttpStatus.OK);
     }
 
 }

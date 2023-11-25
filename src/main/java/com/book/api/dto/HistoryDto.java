@@ -1,7 +1,7 @@
 package com.book.api.dto;
 
 import com.book.api.models.BookStatus;
-import com.book.api.models.BookType;
+import com.book.api.models.HistoryType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -11,12 +11,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class BookDto {
+public class HistoryDto {
     private Long id;
-    private String title;
-    private String author;
-    private String publisher;
-    private int quantity;
-//    private String type;
-    private BookStatus status;
+//    private BookStatus status;
+    private HistoryType type;
 }
