@@ -18,18 +18,14 @@ public class Book extends BaseTimeEntity{
     private Long id;
 
     private String title;
-
     private String author;
-
     private String publisher;
-
-    @Enumerated(EnumType.STRING)
-    private BookType type;
-
-    private int copies; //total cnt
-    private int copiesAvailable; //available cnt
 
     @Enumerated(EnumType.STRING)
     private BookStatus status; //AVAILABLE, VACANT
 
+//    @Enumerated(EnumType.STRING)
+//    private BookType type;
+//    private int copies; //total cnt
+//    private int copiesAvailable; //available cnt
 }

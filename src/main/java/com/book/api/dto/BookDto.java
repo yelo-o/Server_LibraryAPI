@@ -1,5 +1,6 @@
 package com.book.api.dto;
 
+import com.book.api.models.BookStatus;
 import com.book.api.models.BookType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -15,5 +16,6 @@ public class BookDto {
     private String title;
     private String author;
     private String publisher;
-    private BookType type;
+//    private String type;
+    private BookStatus status;
 }

@@ -1,6 +1,8 @@
 package com.book.api.models.security;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -11,6 +13,8 @@ import java.util.List;
 @Table(name = "users")
 @Data
 @NoArgsConstructor
+@Builder
+@AllArgsConstructor
 public class UserEntity {
 
     @Id
@@ -21,6 +25,7 @@ public class UserEntity {
     private String username;
 
     private String password;
+
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(name = "user_roles",
             joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),

@@ -25,22 +25,17 @@ public class BookServiceImpl implements BookService{
     @Override
     public BookDto createBook(BookDto bookDto) {
         Book book = mapToEntity(bookDto);
-
         Book newBook = bookRepository.save(book);
 
-        BookDto bookResponse = new BookDto();
-        bookResponse.setId(newBook.getId());
-        bookResponse.setTitle(newBook.getTitle());
-        bookResponse.setType(newBook.getType());
-        bookResponse.setPublisher(newBook.getPublisher());
-        bookResponse.setAuthor(newBook.getAuthor());
+        BookDto bookResponse = mapToDto(newBook);
 
         return bookResponse;
     }
 
     @Override
     public PageResponse<?> getAllBook(int pageNo, int pageSize) {
-        Pageable pageable = PageRequest.of(pageNo, pageSize, Sort.by("id").descending());
+        Pageable pageable =
+                PageRequest.of(pageNo, pageSize, Sort.by("id").descending());
 
         Page<Book> bookPage = bookRepository.findAll(pageable);
         List<Book> listOfBook = bookPage.getContent();
@@ -71,9 +66,9 @@ public class BookServiceImpl implements BookService{
         if (bookDto.getTitle() != null) {
             book.setTitle(bookDto.getTitle());
         }
-        if (bookDto.getType() != null) {
-            book.setType(bookDto.getType());
-        }
+//        if (bookDto.getType() != null) {
+//            book.setType(bookDto.getType());
+//        }
         return mapToDto(book);
     }
 
@@ -94,20 +89,23 @@ public class BookServiceImpl implements BookService{
 
     //Dto 클래스로 변환
     private BookDto mapToDto(Book book) {
-        BookDto bookDto = new BookDto();
-        bookDto.setId(book.getId());
-        bookDto.setTitle(book.getTitle());
-        bookDto.setType(book.getType());
-        return bookDto;
+        return BookDto.builder()
+                .id(book.getId())
+                .title(book.getTitle())
+                .author(book.getAuthor())
+                .publisher(book.getPublisher())
+                .status(book.getStatus())
+                .build();
     }
 
     //Entity 클래스로 변환
     private Book mapToEntity(BookDto bookDto) {
-        Book book = new Book();
-        book.setTitle(bookDto.getTitle());
-        book.setType(bookDto.getType());
-        book.setType(bookDto.getType());
-        return book;
+        return Book.builder()
+                .title(bookDto.getTitle())
+                .author(bookDto.getAuthor())
+                .publisher(bookDto.getPublisher())
+                .status(bookDto.getStatus())
+                .build();
     }
 
 }
