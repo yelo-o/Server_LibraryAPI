@@ -71,7 +71,7 @@ public class BookController {
         if (bookService.createBorrowHistory(bookId, username)) {
             message = "책 대여가 완료되었습니다.";
         } else {
-            message = "현재 모든 책이 대여중입니다.";
+            message = "대여가 불가능합니다.";
         }
         return new ResponseEntity<>(message, HttpStatus.OK);
     }
@@ -85,7 +85,7 @@ public class BookController {
         if (bookService.createReturnHistory(bookId, username)) {
             message = "책 반납이 완료되었습니다.";
         } else {
-            message = "이미 대여중인 책입니다.";
+            message = "반납할 수 없습니다.";
         }
         return new ResponseEntity<>(message, HttpStatus.OK);
     }

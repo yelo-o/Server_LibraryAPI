@@ -50,6 +50,13 @@ public class BookServiceImpl implements BookService{
         Book book = getExistBook(id);
 //        BookStatus status = book.getStatus();
         int quantity = book.getQuantity();
+        //이미 빌린 책인지 확인
+        Optional<History> historyByUserAndBookOptional = historyRepository.findFirstHistoryByUserAndBookOrderByCreatedDateDesc(user, book);
+        History historyByUserAndBook = historyByUserAndBookOptional.orElseThrow();
+        if (historyByUserAndBook.getType() == HistoryType.BORROW) {
+            System.out.println("이미 빌린 책입니다.");
+            return false;
+        }
 
         if (quantity > 0) {
             //History update
@@ -85,6 +92,20 @@ public class BookServiceImpl implements BookService{
         quantity++;
         book.setQuantity(quantity);
 
+
+        //이 사용자가 책을 빌렸었는지도 확인해야 함
+        Optional<History> historyByUserAndBookOptional = historyRepository.findFirstHistoryByUserAndBookOrderByCreatedDateDesc(user, book);
+        History historyByUserAndBook = historyByUserAndBookOptional.orElseThrow();
+        System.out.println("히스토리 번호 : "+ historyByUserAndBook.getId());
+        System.out.println("책 번호 : "+ historyByUserAndBook.getBook().getId());
+        System.out.println("빌림/반납 : "+ historyByUserAndBook.getType());
+        System.out.println("히스토리 리스트");
+        System.out.println(historyByUserAndBook.getBook().getHistories());
+
+        if (historyByUserAndBook.getType() == HistoryType.RETURN) {
+            System.out.println("이미 반납한 책입니다.");
+            return false;
+        }
 
         if (status == BookStatus.VACANT) {
             book.setStatus(BookStatus.AVAILABLE);
