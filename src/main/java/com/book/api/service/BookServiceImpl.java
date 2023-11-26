@@ -42,30 +42,37 @@ public class BookServiceImpl implements BookService{
     }
 
     @Override
-    public boolean createBorrowHistory(Long id, String username) {
+    public boolean createBorrowHistory(Long bookId, String username) {
         //Get User Entity
         Optional<UserEntity> optionalUser = userRepository.findByUsername(username);
         UserEntity user = optionalUser.orElseThrow();
 
-        Book book = getExistBook(id);
+        Book book = getExistBook(bookId);
 //        BookStatus status = book.getStatus();
         int quantity = book.getQuantity();
         //이미 빌린 책인지 확인
         Optional<History> historyByUserAndBookOptional = historyRepository.findFirstHistoryByUserAndBookOrderByCreatedDateDesc(user, book);
-        History historyByUserAndBook = historyByUserAndBookOptional.orElseThrow();
+        History historyByUserAndBook = historyByUserAndBookOptional.orElse(History.builder().build());
+        historyRepository.save(historyByUserAndBook);
+
         if (historyByUserAndBook.getType() == HistoryType.BORROW) {
             System.out.println("이미 빌린 책입니다.");
             return false;
         }
 
         if (quantity > 0) {
-            //History update
-            History history = History.builder()
-                    .user(user)
-                    .book(book)
-                    .type(HistoryType.BORROW)
-                    .build();
-            historyRepository.save(history);
+            //Create History
+            historyByUserAndBook.setUser(user);
+            historyByUserAndBook.setBook(book);
+            historyByUserAndBook.setType(HistoryType.BORROW);
+            historyRepository.save(historyByUserAndBook);
+
+//            History history = History.builder()
+//                    .user(user)
+//                    .book(book)
+//                    .type(HistoryType.BORROW)
+//                    .build();
+//            historyRepository.save(history);
 
             //Book update
             quantity--;
@@ -81,12 +88,12 @@ public class BookServiceImpl implements BookService{
     }
 
     @Override
-    public boolean createReturnHistory(Long id, String username) {
+    public boolean createReturnHistory(Long bookId, String username) {
         //Get User Entity
         Optional<UserEntity> optionalUser = userRepository.findByUsername(username);
         UserEntity user = optionalUser.orElseThrow();
 
-        Book book = getExistBook(id);
+        Book book = getExistBook(bookId);
         BookStatus status = book.getStatus();
         int quantity = book.getQuantity();
         quantity++;
