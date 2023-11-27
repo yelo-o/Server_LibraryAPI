@@ -61,18 +61,11 @@ public class BookServiceImpl implements BookService{
         }
 
         if (quantity > 0) {
-            //Create History
+            //historyByUserAndBook 업데이트
             historyByUserAndBook.setUser(user);
             historyByUserAndBook.setBook(book);
             historyByUserAndBook.setType(HistoryType.BORROW);
-            historyRepository.save(historyByUserAndBook);
-
-//            History history = History.builder()
-//                    .user(user)
-//                    .book(book)
-//                    .type(HistoryType.BORROW)
-//                    .build();
-//            historyRepository.save(history);
+            //historyRepository.save(historyByUserAndBook); -> Dirty checking
 
             //Book update
             quantity--;
