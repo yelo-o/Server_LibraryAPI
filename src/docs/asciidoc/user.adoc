@@ -1,0 +1,52 @@
+= 도서관 API
+:doctype: book
+:icons: front
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 3
+
+== 유저 회원가입
+=== http-request
+include::{snippets}/create-user/http-request.adoc[]
+=== request-body
+include::{snippets}/create-user/request-body.adoc[]
+=== http-response
+include::{snippets}/create-user/http-response.adoc[]
+=== response-body
+include::{snippets}/create-user/response-body.adoc[]
+
+
+== 책 생성
+=== http-request
+include::{snippets}/create-book/http-request.adoc[]
+=== request-body
+include::{snippets}/create-book/request-body.adoc[]
+=== http-response
+include::{snippets}/create-book/http-response.adoc[]
+=== response-body
+include::{snippets}/create-book/response-body.adoc[]
+
+== 모든 책 불러오기
+=== http-request
+include::{snippets}/get-all-books/http-request.adoc[]
+=== request-body
+include::{snippets}/get-all-books/request-body.adoc[]
+=== http-response
+include::{snippets}/get-all-books/http-response.adoc[]
+=== response-body
+include::{snippets}/get-all-books/response-body.adoc[]
+
+== 책 1권 불러오기
+=== http-request
+include::{snippets}/get-book/http-request.adoc[]
+=== request-body
+include::{snippets}/get-book/request-body.adoc[]
+=== http-response
+include::{snippets}/get-book/http-response.adoc[]
+=== response-body
+include::{snippets}/get-book/response-body.adoc[]
+
+// === 모든 책 불러오기
+// [[Get-All-books]]
+// == Get-all-books
+// operation::get-all-books[]
