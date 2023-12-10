@@ -3,6 +3,7 @@ package com.book.api.controllers;
 import com.book.api.dto.BookDto;
 import com.book.api.dto.PageResponse;
 import com.book.api.jwt.JWTGenerator;
+import com.book.api.models.Book;
 import com.book.api.models.BookStatus;
 import com.book.api.service.BookService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -24,6 +25,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
@@ -33,13 +35,13 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
-import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
-import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
+import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(RestDocumentationExtension.class)
@@ -165,8 +167,6 @@ public class BookControllerTest {
                                 fieldWithPath("status").description("책 상태"))))
                 .andDo(print())
                 .andReturn();
-        String responseContent = result.getResponse().getContentAsString();
-        System.out.println("Response Content: " + responseContent);
     }
 
     @DisplayName("책을 등록한다.")
@@ -220,6 +220,38 @@ public class BookControllerTest {
 
     }
 
+
+    @DisplayName("책을 대출한다.")
+    @Test
+//    @WithMockUser(roles = "USER")
+    @WithMockUser(username= "securityUsername", password="securityPassword", roles="USER")
+    public void borrowBookTest() throws Exception {
+        //given
+        Long bookId = 1L;
+        Book book = Book.builder()
+                .id(bookId)
+                .title("이펙티브 자바")
+                .author("조슈아")
+                .publisher("IT 인사이트")
+                .quantity(10)
+                .status(BookStatus.AVAILABLE)
+                .build();
+
+        //when
+        given(bookService.createBorrowHistory(bookId, "securityUsername"))
+                .willReturn(true);
+
+        ResultActions result = mockMvc.perform(
+                RestDocumentationRequestBuilders.post("/api/book/borrow/{id}", bookId)
+                        .contentType(MediaType.APPLICATION_JSON));
+
+        //then
+        result.andExpect(status().isOk())
+                .andExpect(content().string("책 대여가 완료되었습니다."))
+                .andDo(document("borrow-book",
+                       Preprocessors.preprocessRequest(Preprocessors.prettyPrint()),
+                       Preprocessors.preprocessResponse(Preprocessors.prettyPrint())));
+    }
 
 
 
